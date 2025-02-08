@@ -65,7 +65,7 @@ const Pricing = () => {
     const fetchStocks = async () => {
       try {
         const response = await fetch("https://paper-api.alpaca.markets/v2/assets", {
-          headers: { Authorization: `Bearer PKYDN3YGJ6FHI5YA93ZP` },
+          headers: { Authorization: `Bearer ${ALPACA_API_KEY}` },
         });
         const data = await response.json();
         const tradableStocks = data
@@ -105,7 +105,7 @@ const Pricing = () => {
   const fetchCurrentPriceForSymbol = async (sym) => {
     try {
       const response = await fetch(
-        `https://finnhub.io/api/v1/quote?symbol=${sym}&token=cujpkahr01qgs48265ogcujpkahr01qgs48265p0`
+        `https://finnhub.io/api/v1/quote?symbol=${sym}&token=${FINNHUB_API_KEY}`
       );
       const data = await response.json();
       if (data && data.c) {

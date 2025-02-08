@@ -13,7 +13,7 @@ import CompanyLogos from "./CompanyLogos";
 
 // Replace with your actual Gemini API key (development only!)
 // For production, place it in environment variables or a secure vault.
-const GEMINI_API_KEY = "AIzaSyCc23ewgKDb9Kjo0l-yOPSiCfh8x4-dp78";
+const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
 
 const Hero = () => {
   // Hero layout references
