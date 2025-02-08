@@ -21,8 +21,6 @@
 2. 🔋 [Features](#features)
 3. 🤸 [Quick Start](#quick-start)
 4. 🕸️ [Snippets](#snippets)
-5. 🔗 [Links](#links)
-6. 🚀 [More](#more)
 
 
 ## <a name="tech-stack">⚙️ Tech Stack</a>
@@ -823,14 +821,6 @@ export default Roadmap;
 
 </details>
 
-## <a name="links">🔗 Links</a>
-
-- [Assets](https://drive.google.com/file/d/1JKzwPl_hnpjIlNbwfjMagb4HosxnyXbf/view?usp=sharing)
-- [Design](https://drive.google.com/file/d/15WJMOchujvaQ7Kg9e0nGeGR7G7JOeX1K/view?usp=sharing)
-- [Absolute Relative Positioning](https://css-tricks.com/absolute-positioning-inside-relative-positioning/)
-- [Live Website](https://jsm-brainwave.com/)
-
-## <a name="more">🚀 More</a>
 
 
 
