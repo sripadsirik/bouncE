@@ -6,6 +6,10 @@ import { db, auth } from "../../firebase";
 import { doc, getDoc, setDoc, updateDoc, arrayUnion, onSnapshot } from "firebase/firestore";
 import { onAuthStateChanged } from "firebase/auth";
 
+// Define your API keys (ensure these are safely stored in production)
+const FINNHUB_API_KEY = "cujpkahr01qgs48265ogcujpkahr01qgs48265p0";
+// Note: ALPACA_API_KEY should also be defined somewhere if used (not shown here)
+
 const Pricing = () => {
   const [portfolio, setPortfolio] = useState([]);
   const [balance, setBalance] = useState(10000);

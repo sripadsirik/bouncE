@@ -14,7 +14,7 @@
 }
 
 * {
-  scroll-behavior: smooth
+  scroll-behavior: smooth;
 }
 
 @layer base {
@@ -23,70 +23,68 @@
   }
 }
 
-
-
 .rotate-45 {
-  @apply rotate-[45deg]
+  @apply rotate-[45deg];
 }
 
 .rotate-90 {
-  @apply rotate-[90deg]
+  @apply rotate-[90deg];
 }
 
 .rotate-135 {
-  @apply rotate-[135deg]
+  @apply rotate-[135deg];
 }
 
 .rotate-180 {
-  @apply rotate-[180deg]
+  @apply rotate-[180deg];
 }
 
 .rotate-225 {
-  @apply rotate-[225deg]
+  @apply rotate-[225deg];
 }
 
 .rotate-270 {
-  @apply rotate-[270deg]
+  @apply rotate-[270deg];
 }
 
 .rotate-315 {
-  @apply rotate-[315deg]
+  @apply rotate-[315deg];
 }
 
 .rotate-360 {
-  @apply rotate-[360deg]
+  @apply rotate-[360deg];
 }
 
 .-rotate-45 {
-  @apply rotate-[-45deg]
+  @apply rotate-[-45deg];
 }
 
 .-rotate-90 {
-  @apply rotate-[-90deg]
+  @apply rotate-[-90deg];
 }
 
 .-rotate-135 {
-  @apply rotate-[-135deg]
+  @apply rotate-[-135deg];
 }
 
 .-rotate-180 {
-  @apply rotate-[-180deg]
+  @apply rotate-[-180deg];
 }
 
 .-rotate-225 {
-  @apply rotate-[-225deg]
+  @apply rotate-[-225deg];
 }
 
 .-rotate-270 {
-  @apply rotate-[-270deg]
+  @apply rotate-[-270deg];
 }
 
 .-rotate-315 {
-  @apply rotate-[-315deg]
+  @apply rotate-[-315deg];
 }
 
 .-rotate-360 {
-  @apply rotate-[-360deg]
+  @apply rotate-[-360deg];
 }
 
 .fish-container {
@@ -114,4 +112,83 @@
   50% { transform: translateX(calc(100vw + 100px)) rotateY(0); }
   51% { transform: translateX(calc(100vw + 100px)) rotateY(180deg); }
   100% { transform: translateX(-100px) rotateY(180deg); }
+}
+
+/* ---------- Coral Reef Animations ---------- */
+
+/* Coral Reef Strings Styles */
+.coral-reef-container {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  pointer-events: none;
+  z-index: -1;
+}
+
+.coral-reef {
+  position: absolute;
+  width: 300px;         /* Increased length (width) for a longer string */
+  height: 5px;          /* Skinny like a string */
+  border-radius: 9999px; /* Fully rounded ends */
+  opacity: 0.8;
+  animation: fly 10s ease-in-out infinite;
+}
+
+/* Each coral string gets its own solid color */
+.coral-reef:nth-child(1) {
+  background-color: #7e22ce; /* Purple */
+  animation-delay: 0s;
+}
+.coral-reef:nth-child(2) {
+  background-color: #f97316; /* Orange */
+  animation-delay: 2s;
+}
+.coral-reef:nth-child(3) {
+  background-color: #3b82f6; /* Blue */
+  animation-delay: 4s;
+}
+.coral-reef:nth-child(4) {
+  background-color: #e11d48; /* Red/Pink */
+  animation-delay: 6s;
+}
+.coral-reef:nth-child(5) {
+  background-color: #10b981; /* Green */
+  animation-delay: 8s;
+}
+
+/* Keyframes for the "fly" animation - strings move in and out across the screen */
+@keyframes fly {
+  0% {
+    transform: translate(-200px, 110vh) scale(0.5);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  25% {
+    transform: translate(10vw, 20vh) scale(1);
+    opacity: 1;
+  }
+  40% {
+    transform: translate(50vw, 40vh) scale(1.1);
+    opacity: 1;
+  }
+  55% {
+    transform: translate(80vw, 60vh) scale(0.9);
+    opacity: 1;
+  }
+  70% {
+    transform: translate(30vw, 80vh) scale(1);
+    opacity: 1;
+  }
+  85% {
+    transform: translate(90vw, 20vh) scale(0.5);
+    opacity: 0;
+  }
+  100% {
+    transform: translate(120vw, -100px) scale(0.5);
+    opacity: 0;
+  }
 }
