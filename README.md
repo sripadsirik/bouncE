@@ -51,6 +51,10 @@ Backend & Data Management:
 
 👉 **Responsive**: Ensures seamless functionality and aesthetics across all devices
 
+👉 **Interactive Learning**: The platform features interactive podcasts and lessons that explain complex financial concepts in a fun and engaging manner.
+
+👉 **AI Integration**: Advanced AI tools power features like chat and personalized insights, helping users navigate financial information and receive tailored recommendations.
+
 and many more, including code architecture and reusability
 
 ## <a name="quick-start">🤸 Quick Start</a>
@@ -73,6 +77,10 @@ Install the project dependencies using npm:
 
 ```bash
 npm install
+```
+
+```bash
+npm install firebase
 ```
 
 **Running the Project**
