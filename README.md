@@ -9,9 +9,21 @@
 
   <h3 align="center">bouncE -> SparkHacks Winning Project</h3>
 
-  <div align="center">
-     Contributers: Sripad Sirikonda, Shanmukh Chebrolu, Rahul Gowda, and Mohammed Fatheen Ahmed
-  </div>
+  <h4 align="center">
+    Contributors:
+    <a href="https://www.linkedin.com/in/sripad-sirikonda-cs/" target="_blank" rel="noopener noreferrer">
+      Sripad Sirikonda
+    </a>,
+    <a href="https://www.linkedin.com/in/shanmukh-chebrolu/" target="_blank" rel="noopener noreferrer">
+      Shanmukh Chebrolu
+    </a>,
+    <a href="https://www.linkedin.com/in/rahul-gowda-713283232/" target="_blank" rel="noopener noreferrer">
+      Rahul Gowda
+    </a>,
+    <a href="https://www.linkedin.com/in/fatheenillinois/" target="_blank" rel="noopener noreferrer">
+      Mohammed Fatheen Ahmed
+    </a>
+  </h4>
 </div>
 
 ## 📋 <a name="table">Table of Contents</a>
