@@ -4,12 +4,13 @@ import { getAuth, GoogleAuthProvider } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 
 const firebaseConfig = {
-    // apiKey: apiKey,
-    // authDomain: authDomain,
-    // projectId: projectId,
-    // storageBucket: storageBucket,
-    // messagingSenderId: messagingSenderId,
-    // appId: appIdd
+    // apiKey: REACT_FIREBASE_API_KEY,
+    // authDomain: REACT_FIREBASE_AUTH_DOMAIN,
+    // projectId: REACT_FIREBASE_PROJECT_ID,
+    // storageBucket: REACT_FIREBASE_STORAGE_BUCKET,
+    // messagingSenderId: REACT_FIREBASE_MESSENGER_SENDER_ID,
+    // appId: REACT_FIREBASE_STORAGE_APP_ID,
+    // measurementId: REACT_FIREBASE_MEASUREMENT_ID
 
     apiKey: "AIzaSyCKcxg1Syl-KR9swdzhA9t0yrP1cUpwx8Y",
     authDomain: "bounce4-a7b93.firebaseapp.com",

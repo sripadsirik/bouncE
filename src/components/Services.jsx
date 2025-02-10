@@ -89,16 +89,7 @@ const Services = () => {
             background-position: 0% 50%;
           }
         }
-        @keyframes ripple {
-          0% {
-            transform: translate(-50%, -50%) scale(0);
-            opacity: 1;
-          }
-          100% {
-            transform: translate(-50%, -50%) scale(1.2);
-            opacity: 0;
-          }
-        }
+  
         .water-animation {
           /* Water-like gradient background animation */
           background: linear-gradient(45deg, #1e3a8a, #1e40af, #1e3a8a);
@@ -120,7 +111,6 @@ const Services = () => {
             transparent 70%
           );
           transform: translate(-50%, -50%) scale(0);
-          animation: ripple 3s ease infinite;
         }
       `}</style>
     </Section>

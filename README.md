@@ -7,11 +7,11 @@
     <img src="https://img.shields.io/badge/-Tailwind_CSS-black?style=for-the-badge&logoColor=white&logo=tailwindcss&color=06B6D4" alt="tailwindcss" />
   </div>
 
-  <h3 align="center">Modern UI/UX website</h3>
+  <h3 align="center">bouncE -> SparkHacks Winning Project</h3>
 
-   <div align="center">
-     Build this project step by step with our detailed tutorial on <a href="https://www.youtube.com/@javascriptmastery/videos" target="_blank"><b>JavaScript Mastery</b></a> YouTube.
-    </div>
+  <div align="center">
+     Contributers: Sripad Sirikonda, Shanmukh Chebrolu, Rahul Gowda, and Mohammed Fatheen Ahmed
+  </div>
 </div>
 
 ## 📋 <a name="table">Table of Contents</a>
@@ -25,9 +25,16 @@
 
 ## <a name="tech-stack">⚙️ Tech Stack</a>
 
-- Vite
-- React.js
-- Tailwind CSS
+Frontend Development:
+
+- React & Vite: For a fast, responsive, and modular user interface.
+- Framer Motion: To create smooth, engaging animations and transitions—including unique effects like wave transitions between pages.
+- CSS & Theming: An ocean-themed design was chosen to evoke a sense of calm and fluidity, reflecting the dynamic nature of financial markets.
+Backend & Data Management:
+
+- Firebase: Used for authentication, real-time database updates, and hosting.
+- Trading APIs: To create a paper trading environment that simulates buying and selling stocks without any financial risk.
+- Financial News APIs: For fetching the latest market news and integrating it directly into the platform.
 
 ## <a name="features">🔋 Features</a>
 
