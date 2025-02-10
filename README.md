@@ -30,6 +30,7 @@ Frontend Development:
 - React & Vite: For a fast, responsive, and modular user interface.
 - Framer Motion: To create smooth, engaging animations and transitions—including unique effects like wave transitions between pages.
 - CSS & Theming: An ocean-themed design was chosen to evoke a sense of calm and fluidity, reflecting the dynamic nature of financial markets.
+
 Backend & Data Management:
 
 - Firebase: Used for authentication, real-time database updates, and hosting.
