@@ -18,6 +18,7 @@ const Pricing = () => {
   const [availableStocks, setAvailableStocks] = useState([]);
   // New state to hold the latest price for each stock in the portfolio
   const [portfolioPrices, setPortfolioPrices] = useState({});
+  const [predictions, setPredictions] = useState([]);
 
   // Listen for auth state changes so that the user document loads on page reload,
   // and clear state when the user signs out.
@@ -100,6 +101,41 @@ const Pricing = () => {
       return null;
     }
   };
+
+  const predictStockPrice = async () => {
+    setLoading(true);
+    setPredictions([]);
+    setError("");
+  
+    try {
+      const response = await fetch("http://127.0.0.1:5174/predict", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ symbol }),
+      });
+  
+      // Check if the response is OK (status in the 200–299 range)
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error("Prediction API error:", errorData);
+        setError(errorData.detail || "Prediction error");
+        setLoading(false);
+        return;
+      }
+  
+      const data = await response.json();
+      if (data.predictions) {
+        setPredictions(data.predictions);
+      } else {
+        setError("Failed to get predictions");
+      }
+    } catch (err) {
+      console.error("Error fetching predictions:", err);
+      setError("Prediction error");
+    }
+    setLoading(false);
+  };
+  
 
   // New helper function to fetch the current price for a given symbol.
   const fetchCurrentPriceForSymbol = async (sym) => {
@@ -338,6 +374,20 @@ const Pricing = () => {
             >
               Sell
             </button>
+            <button
+              className="px-6 py-2 bg-purple-500 text-white rounded-lg shadow-md"
+              onClick={predictStockPrice}
+              disabled={loading}
+            >
+              Predict 3-Day Price
+            </button>
+            <ul>
+              {predictions.map((pred, index) => (
+                <li key={index} className="text-center text-yellow-400">
+                  {pred.date}: ${pred.predicted_close}
+                </li>
+              ))}
+            </ul>
           </div>
 
           {/* Display current stock price */}

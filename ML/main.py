@@ -55,7 +55,7 @@ async def predict(stock: StockSymbol):
     
     # Fetch historical data (approximately 11 years of data)
     timeframe = TimeFrame.Day 
-    start_date = (datetime.today() - timedelta(days=4015)).strftime("%Y-%m-%d")
+    start_date = (datetime.today() - timedelta(days=5000)).strftime("%Y-%m-%d")
     
     request_params = StockBarsRequest(
         symbol_or_symbols=symbol, 
@@ -168,4 +168,4 @@ async def predict(stock: StockSymbol):
 
 if __name__ == '__main__':
     import uvicorn
-    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
+    uvicorn.run("main:app", host="127.0.0.1", port=5174, reload=True)
