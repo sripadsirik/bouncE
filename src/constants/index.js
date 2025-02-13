@@ -45,7 +45,7 @@ export const navigation = [
   {
     id: "1",
     title: "Financial News",
-    url: "#collaboration",
+    url: "#news",
   },
   {
     id: "2",
@@ -238,19 +238,19 @@ export const benefits = [
     id: 1,
     title: "Basic Investing",
     text: "This text from 'Basic Investing.pdf' provides a foundational understanding of investing, differentiating it from saving and emphasizing the potential for higher returns but also acknowledging the risk of loss...",
-    audioUrl: "/public/audio/Basic Investing.mp3" // <-- or wherever your file truly lives
+    audioUrl: "https://firebasestorage.googleapis.com/v0/b/bounce-3673f.firebasestorage.app/o/audio%2FBasic%20Investing.mp3?alt=media&token=c5b9b9bb-cd91-4c71-9fc2-a9ad28040f7d" // <-- or wherever your file truly lives
   },
   {
     id: 2,
     title: "Stock Investing",
     text: "The first source, excerpted from 'Stock-Investing-101-eBook.pdf,' is an introductory guide to stock market investing. It emphasizes identifying high-quality companies with strong 'economic moats' and long-term growth potential...",
-    audioUrl: "/public/audio/Stock Investing 101.mp3"
+    audioUrl: "https://firebasestorage.googleapis.com/v0/b/bounce-3673f.firebasestorage.app/o/audio%2FStock%20Investing%20101.mp3?alt=media&token=ea79e16e-cb18-41c9-a7e3-0fd0ca5e0df6"
   },
   {
     id: 3,
     title: "Technical Analysis",
     text: "This ninth edition of Technical Analysis of Stock Trends by Edwards and Magee expands upon previous editions, updating chapters on portfolio and risk management and adding a new chapter on long-term investing...",
-    audioUrl: "/public/audio/technical analysis.mp3"
+    audioUrl: "https://firebasestorage.googleapis.com/v0/b/bounce-3673f.firebasestorage.app/o/audio%2Ftechnical%20analysis.mp3?alt=media&token=8c445f9a-8419-45e7-8cad-e8e23fe5c904"
   }
 ];
 
