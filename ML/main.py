@@ -109,7 +109,7 @@ async def predict(stock: StockSymbol):
         raise HTTPException(status_code=404, detail=f"No historical data found for {symbol}. The symbol might not exist or might not be supported.")
     
     try:
-        # Prepare and clean the data
+    # Prepare and clean the data
         bars.reset_index(inplace=True)
         bars['timestamp'] = pd.to_datetime(bars['timestamp'], utc=True).dt.tz_localize(None)
         bars['year'] = bars['timestamp'].dt.year
@@ -159,7 +159,7 @@ async def predict(stock: StockSymbol):
         trend_days = 3    # predict for next 3 trading days
         
         # Compute WMA for each expected feature.
-        # (If a feature isn't present, default to 0.)
+            # (If a feature isn't present, default to 0.)
         columns_needed = ['open', 'high', 'low', 'volume', 'trade_count', 'vwap']
         wma_features = {}
         for col in columns_needed:
@@ -171,8 +171,8 @@ async def predict(stock: StockSymbol):
         # Determine the last trading date in the data and compute future business days.
         last_row = bars.iloc[-1]
         last_date = pd.Timestamp(year=int(last_row['year']),
-                                 month=int(last_row['month']),
-                                 day=int(last_row['day']))
+                                month=int(last_row['month']),
+                                day=int(last_row['day']))
         future_dates = pd.bdate_range(start=last_date + timedelta(days=1), periods=trend_days)
         
         # Build a DataFrame of features for future predictions.
