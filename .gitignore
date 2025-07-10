@@ -26,4 +26,4 @@ dist-ssr
 
 venv
 
-bouncE.env
+.env.production
