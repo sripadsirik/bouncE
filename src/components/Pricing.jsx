@@ -109,7 +109,8 @@ const Pricing = () => {
   
     try {
       // Use environment variable for API URL, fallback to localhost for development
-      const apiUrl = process.env.REACT_APP_ML_API_URL || "http://127.0.0.1:10000";
+      const apiUrl = import.meta.env.VITE_ML_API_URL;
+      // const apiUrl = "http://127.0.0.1:10000";
       const response = await fetch(`${apiUrl}/predict`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
