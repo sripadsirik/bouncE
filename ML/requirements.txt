@@ -1,0 +1,8 @@
+fastapi
+uvicorn[standard]
+python-dotenv
+alpaca-trade-api
+alpaca-py
+scikit-learn
+numpy
+pandas

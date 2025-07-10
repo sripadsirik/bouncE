@@ -5,7 +5,7 @@ import "./Chatbot.css";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
 // Replace with your Gemini API key (for development only)
-const GEMINI_API_KEY = "AIzaSyCc23ewgKDb9Kjo0l-yOPSiCfh8x4-dp78";
+const GEMINI_API_KEY = "AIzaSyBxUVdiqVasuAp38jxw_VpsxodhpiStQrQ";
 
 const Chatbot = () => {
   const [isOpen, setIsOpen] = useState(false);

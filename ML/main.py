@@ -23,7 +23,11 @@ load_dotenv()
 # Get your Alpaca credentials from the environment
 API_KEY = os.getenv("APCA_API_KEY_ID")
 API_SECRET_KEY = os.getenv("APCA_API_SECRET_KEY")
-BASE_URL = "https://paper-api.alpaca.markets"
+BASE_URL = "https://paper-api.alpaca.markets/v2"
+
+# Validate required environment variables
+if not API_KEY or not API_SECRET_KEY:
+    raise ValueError("APCA_API_KEY_ID and APCA_API_SECRET_KEY environment variables are required")
 
 app = FastAPI()
 
@@ -40,6 +44,27 @@ app.add_middleware(
 class StockSymbol(BaseModel):
     symbol: str
 
+@app.get("/")
+async def root():
+    return {"message": "Stock Prediction API is running!", "status": "healthy"}
+
+@app.get("/health")
+async def health_check():
+    return {"status": "healthy"}
+
+@app.get("/test-alpaca")
+async def test_alpaca():
+    try:
+        # Test if API keys are loaded
+        if not API_KEY or not API_SECRET_KEY:
+            return {"error": "API keys not found", "API_KEY": bool(API_KEY), "API_SECRET_KEY": bool(API_SECRET_KEY)}
+        
+        api = tradeapi.REST(API_KEY, API_SECRET_KEY, BASE_URL, api_version='v2')
+        account = api.get_account()
+        return {"status": "success", "account_status": account.status}
+    except Exception as e:
+        return {"error": str(e)}
+
 @app.post("/predict")
 async def predict(stock: StockSymbol):
     symbol = stock.symbol
@@ -48,6 +73,9 @@ async def predict(stock: StockSymbol):
     
     # Create Alpaca API clients
     try:
+        # Ensure API_KEY and API_SECRET_KEY are not None and are strings
+        if not isinstance(API_KEY, str) or not isinstance(API_SECRET_KEY, str):
+            raise ValueError("API_KEY and API_SECRET_KEY must be set as strings.")
         api = tradeapi.REST(API_KEY, API_SECRET_KEY, BASE_URL, api_version='v2')
         stock_client = StockHistoricalDataClient(API_KEY, API_SECRET_KEY)
     except Exception as e:
@@ -66,106 +94,120 @@ async def predict(stock: StockSymbol):
     try:
         bars = stock_client.get_stock_bars(request_params).df
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error retrieving data for {symbol}: {str(e)}")
+        error_msg = str(e)
+        if "403" in error_msg or "Forbidden" in error_msg:
+            raise HTTPException(
+                status_code=403, 
+                detail=f"Access denied to historical data for {symbol}. This could be due to: "
+                       f"1) Invalid API credentials, 2) Insufficient permissions, or "
+                       f"3) API rate limits exceeded. Please check your Alpaca API credentials."
+            )
+        else:
+            raise HTTPException(status_code=500, detail=f"Error retrieving data for {symbol}: {str(e)}")
     
     if bars.empty:
-        raise HTTPException(status_code=404, detail="No historical data found for this symbol.")
+        raise HTTPException(status_code=404, detail=f"No historical data found for {symbol}. The symbol might not exist or might not be supported.")
     
-    # Prepare and clean the data
-    bars.reset_index(inplace=True)
-    bars['timestamp'] = pd.to_datetime(bars['timestamp'], utc=True).dt.tz_localize(None)
-    bars['year'] = bars['timestamp'].dt.year
-    bars['month'] = bars['timestamp'].dt.month
-    bars['day'] = bars['timestamp'].dt.day
-    bars['dayofweek'] = bars['timestamp'].dt.dayofweek
-    bars.drop(columns=['timestamp'], inplace=True)
-    bars = bars.drop(columns=['symbol'], errors='ignore')
-    
-    # Prepare features (X) and target (y)
-    X = bars.drop(columns=['close'])
-    y = bars['close']
-    
-    split_index = int(len(bars) * 0.8)
-    X_train, _ = X.iloc[:split_index], X.iloc[split_index:]
-    y_train, _ = y.iloc[:split_index], y.iloc[split_index:]
-    
-    # Create a pipeline for scaling, polynomial feature generation, and Ridge regression
-    pipeline = Pipeline([
-        ('scaler', StandardScaler()),
-        ('poly', PolynomialFeatures()),
-        ('ridge', Ridge())
-    ])
-    
-    param_grid = {
-        'poly__degree': [1, 2, 3],
-        'ridge__alpha': [0.01, 0.1, 1.0, 10.0, 100.0]
-    }
-    
-    tscv = TimeSeriesSplit(n_splits=5)
-    grid_search = GridSearchCV(
-        pipeline,
-        param_grid,
-        cv=tscv,
-        scoring='neg_mean_squared_error',
-        n_jobs=-1
-    )
-    
-    grid_search.fit(X_train, y_train)
-    
-    # Define weighted moving average (WMA) helper function
-    def weighted_moving_average(data, window_size):
-        weights = np.arange(1, window_size + 1)  # More weight to recent data points
-        return (data[-window_size:] * weights).sum() / weights.sum()
-    
-    window_size = 5   # last 5 days to calculate WMA
-    trend_days = 3    # predict for next 3 trading days
-    
-    # Compute WMA for each expected feature.
-    # (If a feature isn’t present, default to 0.)
-    columns_needed = ['open', 'high', 'low', 'volume', 'trade_count', 'vwap']
-    wma_features = {}
-    for col in columns_needed:
-        if col in bars.columns:
-            wma_features[col] = weighted_moving_average(bars[col].values, window_size)
-        else:
-            wma_features[col] = 0
-    
-    # Determine the last trading date in the data and compute future business days.
-    last_row = bars.iloc[-1]
-    last_date = pd.Timestamp(year=int(last_row['year']),
-                             month=int(last_row['month']),
-                             day=int(last_row['day']))
-    future_dates = pd.bdate_range(start=last_date + timedelta(days=1), periods=trend_days)
-    
-    # Build a DataFrame of features for future predictions.
-    future_features_list = []
-    for date in future_dates:
-        future_features_list.append({
-            'open': wma_features.get('open', 0),
-            'high': wma_features.get('high', 0),
-            'low': wma_features.get('low', 0),
-            'volume': wma_features.get('volume', 0),
-            'trade_count': wma_features.get('trade_count', 0),
-            'vwap': wma_features.get('vwap', 0),
-            'year': date.year,
-            'month': date.month,
-            'day': date.day,
-            'dayofweek': date.dayofweek
-        })
-    
-    future_features = pd.DataFrame(future_features_list)
-    future_predictions = grid_search.predict(future_features)
-    
-    # Prepare the output with the date and predicted close price.
-    predictions = []
-    for date, pred in zip(future_dates, future_predictions):
-        predictions.append({
-            "date": date.strftime("%Y-%m-%d"),
-            "predicted_close": round(float(pred), 2)
-        })
-    
-    return {"predictions": predictions}
+    try:
+        # Prepare and clean the data
+        bars.reset_index(inplace=True)
+        bars['timestamp'] = pd.to_datetime(bars['timestamp'], utc=True).dt.tz_localize(None)
+        bars['year'] = bars['timestamp'].dt.year
+        bars['month'] = bars['timestamp'].dt.month
+        bars['day'] = bars['timestamp'].dt.day
+        bars['dayofweek'] = bars['timestamp'].dt.dayofweek
+        bars.drop(columns=['timestamp'], inplace=True)
+        bars = bars.drop(columns=['symbol'], errors='ignore')
+        
+        # Prepare features (X) and target (y)
+        X = bars.drop(columns=['close'])
+        y = bars['close']
+        
+        split_index = int(len(bars) * 0.8)
+        X_train, _ = X.iloc[:split_index], X.iloc[split_index:]
+        y_train, _ = y.iloc[:split_index], y.iloc[split_index:]
+        
+        # Create a pipeline for scaling, polynomial feature generation, and Ridge regression
+        pipeline = Pipeline([
+            ('scaler', StandardScaler()),
+            ('poly', PolynomialFeatures()),
+            ('ridge', Ridge())
+        ])
+        
+        param_grid = {
+            'poly__degree': [1, 2, 3],
+            'ridge__alpha': [0.01, 0.1, 1.0, 10.0, 100.0]
+        }
+        
+        tscv = TimeSeriesSplit(n_splits=5)
+        grid_search = GridSearchCV(
+            pipeline,
+            param_grid,
+            cv=tscv,
+            scoring='neg_mean_squared_error',
+            n_jobs=-1
+        )
+        
+        grid_search.fit(X_train, y_train)
+        
+        # Define weighted moving average (WMA) helper function
+        def weighted_moving_average(data, window_size):
+            weights = np.arange(1, window_size + 1)  # More weight to recent data points
+            return (data[-window_size:] * weights).sum() / weights.sum()
+        
+        window_size = 5   # last 5 days to calculate WMA
+        trend_days = 3    # predict for next 3 trading days
+        
+        # Compute WMA for each expected feature.
+        # (If a feature isn't present, default to 0.)
+        columns_needed = ['open', 'high', 'low', 'volume', 'trade_count', 'vwap']
+        wma_features = {}
+        for col in columns_needed:
+            if col in bars.columns:
+                wma_features[col] = weighted_moving_average(bars[col].values, window_size)
+            else:
+                wma_features[col] = 0
+        
+        # Determine the last trading date in the data and compute future business days.
+        last_row = bars.iloc[-1]
+        last_date = pd.Timestamp(year=int(last_row['year']),
+                                 month=int(last_row['month']),
+                                 day=int(last_row['day']))
+        future_dates = pd.bdate_range(start=last_date + timedelta(days=1), periods=trend_days)
+        
+        # Build a DataFrame of features for future predictions.
+        future_features_list = []
+        for date in future_dates:
+            future_features_list.append({
+                'open': wma_features.get('open', 0),
+                'high': wma_features.get('high', 0),
+                'low': wma_features.get('low', 0),
+                'volume': wma_features.get('volume', 0),
+                'trade_count': wma_features.get('trade_count', 0),
+                'vwap': wma_features.get('vwap', 0),
+                'year': date.year,
+                'month': date.month,
+                'day': date.day,
+                'dayofweek': date.dayofweek
+            })
+        
+        future_features = pd.DataFrame(future_features_list)
+        future_predictions = grid_search.predict(future_features)
+        
+        # Prepare the output with the date and predicted close price.
+        predictions = []
+        for date, pred in zip(future_dates, future_predictions):
+            predictions.append({
+                "date": date.strftime("%Y-%m-%d"),
+                "predicted_close": round(float(pred), 2)
+            })
+        
+        return {"predictions": predictions}
+        
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error processing data for {symbol}: {str(e)}")
 
 if __name__ == '__main__':
     import uvicorn
-    uvicorn.run("main:app", host="127.0.0.1", port=5173, reload=True)
+    port = int(os.environ.get("PORT", 8080))
+    uvicorn.run("main:app", host="0.0.0.0", port=port)
